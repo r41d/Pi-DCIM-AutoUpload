@@ -1,4 +1,4 @@
-[udiskie]
+[DCIMautoupload]
 Identity=unix-group:plugdev
 Action=org.freedesktop.udisks2.*
 ResultAny=yes

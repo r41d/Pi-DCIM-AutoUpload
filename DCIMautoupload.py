@@ -58,3 +58,4 @@ if __name__ == "__main__":
             print(f"Upload success {file} → {newname}")
 
     # os.system(f"udiskie-umount {args.mount_path}")
+    print(f"DCIM auto uploader done with {DCIM} :)")
