@@ -39,7 +39,7 @@ if __name__ == "__main__":
             
             exif = pyexiv2.ImageMetadata(file_path)
             exif.read()
-            model = exif["Exif.Image.Model"].value
+            model = exif["Exif.Image.Model"].value.strip()
             dt = exif["Exif.Image.DateTime"].value
             
         except Exception as e:
