@@ -20,13 +20,16 @@ if __name__ == "__main__":
     if args.event != "device_mounted":
         print("different event than 'device_mounted', exiting...")
         exit(1)
-    
+
     DCIM = os.path.join(args.mount_path, "DCIM")
+    if not os.path.isdir(DCIM):
+        print(f"no DCIM folder in {args.mount_path}, exiting...")
+        exit(1)
 
     files = [glob.glob(os.path.join(DCIM, "**", f"*{ext}")) for ext in EXTENSIONS]
     files = list(itertools.chain(*files))
 
-    print(f"DCIM auto uploader called for folder {DCIM} with {len(files)} files :)")
+    print(f"DCIM auto uploader working on {DCIM} with {len(files)} files :)")
 
     for file_path in files:
         try:
@@ -44,5 +47,12 @@ if __name__ == "__main__":
             continue
 
         newname = f"{dt.strftime('%Y%m%d_%H%M%S')}_{model}_{base}.{ext}"
-        # print(file, "→", newname)
-        rclone.copyto(file_path, REMOTE+newname, ignore_existing=True, args=[])
+        #print(file, "→", newname)
+        try:
+            rclone.copyto(file_path, REMOTE+newname, ignore_existing=True, show_progress=False, args=[])
+        except KeyError as ke:
+            print(f"KeyError on {file}:", ke)
+        else:
+            print(f"Upload success {file} → {newname}")
+
+    # os.system(f"udiskie-umount {args.mount_path}")
