@@ -52,6 +52,8 @@ if __name__ == "__main__":
             rclone.copyto(file_path, REMOTE+newname, ignore_existing=True, show_progress=False, args=[])
         except KeyError as ke:
             print(f"KeyError on {file}:", ke)
+        except rclone.RcloneException as rce:
+            print(f"rclone fail on {file}:", rce)
         else:
             print(f"Upload success {file} → {newname}")
 
