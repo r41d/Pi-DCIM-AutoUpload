@@ -1,0 +1,26 @@
+#!/bin/bash -x
+set -euo pipefail
+# IFS=$'\n\t'
+
+echo "Installing packages..."
+apt install python3-py3exiv2 rclone python3-pip
+pip install --user --break-system-packages rclone-python
+
+echo "Placing autoupload.py script"
+mkdir -p /usr/local/bin/
+cp DCIMautoupload.py /usr/local/bin/
+
+echo "Configuring polkit to allow plugdev users"
+mkdir -p /etc/polkit-1/localauthority/50-local.d/
+cp consolekit.pkla /etc/polkit-1/localauthority/50-local.d/
+systemctl restart polkit.service
+
+echo "Installing udiskie and configuring service with event hook"
+apt install -y udiskie
+mkdir -p /usr/local/lib/systemd/system/
+cp udiskie.service /usr/local/lib/systemd/system/
+systemctl daemon-reload
+systemctl enable udiskie.service
+systemctl restart udiskie.service
+
+echo "rclone config needs to be done by user!"

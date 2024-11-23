@@ -1,0 +1,11 @@
+[Unit]
+Description=Handle automounting of usb devices
+
+[Service]
+Type=simple
+User=pi
+ExecStart=/usr/bin/udiskie -F -T -N --notify-command "/usr/local/bin/DCIMautoupload.py {event} {mount_path}"
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
