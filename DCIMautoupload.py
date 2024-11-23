@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import os, glob
+import os, sys, glob
 import argparse
 import itertools
 
@@ -56,6 +56,7 @@ if __name__ == "__main__":
             print(f"rclone fail on {file}:", rce)
         else:
             print(f"Upload success {file} → {newname}")
+        sys.stdout.flush()
 
     # os.system(f"udiskie-umount {args.mount_path}")
     print(f"DCIM auto uploader done with {DCIM} :)")
