@@ -7,7 +7,7 @@ import itertools
 import pyexiv2 # apt install python3-py3exiv2
 from rclone_python import rclone # pip install rclone-python
 
-EXTENSIONS = [".JPG", ".RW2", ".CR2", ".ORF", ".ARW", ".DNF"] # TODO: from config
+EXTENSIONS = [".JPG", ".HEIC", ".HIF", ".RW2", ".CR2", ".CR3", ".ORF", ".ARW", ".DNF"] # TODO: from config
 REMOTE = "sciebo:DCIM/" # TODO: from config
 
 if __name__ == "__main__":
