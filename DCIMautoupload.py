@@ -7,7 +7,24 @@ import itertools
 import pyexiv2 # apt install python3-py3exiv2
 from rclone_python import rclone # pip install rclone-python
 
-EXTENSIONS = [".JPG", ".HEIC", ".HIF", ".RW2", ".CR2", ".CR3", ".ORF", ".ARW", ".DNF"] # TODO: from config
+EXTENSIONS = [
+    "JPG", "JPEG", "TIF", "TIFF", "HIF", "HEIF", "HEIC", # non-raw pictures
+    "XMP", # metadata
+    "DNG", "RAW", # "universal" raw extensions
+    "CRW", "CR2", "CR3", # Canon
+    "RAW", # Fujifilm
+    "3FR", "FFF", # Hasselblad
+    "DCR", "DCS", "KDC", # Kodak
+    "RWL", # Leica
+    "MRW", "MDC", # Minolta
+    "NEF", "NRW", # Nikon
+    "ORF", "ORI", # Olympus
+    "RW2", # Panasonic
+    "PEF", # Pentax
+    "SRW", # Samsung
+    "X3F", # Sigma
+    "ARW", "SRF", "SR2", # Sony
+]
 REMOTE = "sciebo:DCIM/" # TODO: from config
 
 if __name__ == "__main__":
@@ -26,8 +43,9 @@ if __name__ == "__main__":
         print(f"no DCIM folder in {args.mount_path}, exiting...")
         exit(1)
 
-    files = [glob.glob(os.path.join(DCIM, "**", f"*{ext}")) for ext in EXTENSIONS]
-    files = list(itertools.chain(*files))
+    extensions = EXTENSIONS + map(str.lower, EXTENSIONS) # consider both upper and lower case
+    files = [glob.glob(os.path.join(DCIM, "**", f"*.{ext}")) for ext in extensions]
+    files = sorted(itertools.chain(*files))
 
     print(f"DCIM auto uploader working on {DCIM} with {len(files)} files :)")
 
