@@ -3,8 +3,8 @@ set -euo pipefail
 # IFS=$'\n\t'
 
 echo "Installing packages..."
-apt install python3-py3exiv2 rclone python3-pip
-pip install --user --break-system-packages rclone-python
+apt install python3-py3exiv2 rclone python3-pip exiftool
+pip install --user --break-system-packages rclone-python PyExifTool tzdata
 
 echo "Placing autoupload.py script"
 mkdir -p /usr/local/bin/
