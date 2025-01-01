@@ -40,7 +40,7 @@ class Uploader:
         if not rclone.check_remote_existing(REMOTE_NAME):
             print(f"rclone remote {REMOTE_NAME} does not exist, exiting...")
             exit(1)
-        self.REMOTE = f"{REMOTE_NAME}:{REMOTE_DIR}/"
+        self.REMOTE = f"{REMOTE_NAME}:{REMOTE_DIR}"
         self.sha1remote = rclone.hash(HashTypes.sha1, self.REMOTE)
 
     @staticmethod
@@ -60,7 +60,7 @@ class Uploader:
 
     def upload(self, src, dst):
         try:
-            rclone.copyto(src, self.REMOTE+dst, ignore_existing=True, show_progress=False, args=[])
+            rclone.copyto(src, os.path.join(self.REMOTE, dst), ignore_existing=True, show_progress=False, args=[])
         except KeyError as ke:
             print(f"KeyError on {src}:", ke)
         except rclone.RcloneException as rce:
