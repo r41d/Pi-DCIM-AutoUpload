@@ -10,13 +10,13 @@ This tool is intended for Raspbian Lite installations since those don't include 
 # Installation
 Copy the project folder to the pi and run `sudo ./install.sh`
 
-Next, configure rclone, I use sciebo for that and a folder named `DCIM`, but that's up to you.
-You may need to adapt the `REMOTE` variable in the script.
+Next, configure rclone, I use Sciebo (via WebDAV) for that and a folder named `DCIM`, but that's up to you.
+You may need to adapt the `REMOTE_NAME` and `REMOTE_DIR` variables in the script.
 
 # Usage
 Plug camera via USB cable (or SD card in SD card reader) into the pi and wait :)
 
-Progress can be seen with `journalctl -fu DCIMautoupload.service` or in the remote destination.
+Progress can be monitored with `journalctl -fu DCIMautoupload.service` and files should start popping up in the remote destination.
 
 # Notes/Problems
 
