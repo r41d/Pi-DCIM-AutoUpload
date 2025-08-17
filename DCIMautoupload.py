@@ -110,11 +110,11 @@ def uploadDCIM(mount_path, uploader):
 
             for k, v in MODEL_RENAMINGS.items():
                 if k in model:
-                    model = model.replace(model, v)
+                    model = model.replace(k, v)
                     continue # only apply 1 renamimg rule at maximum
 
-            if '/' in model: # We don't want unnecessary subfolders because of potential slashes in camera model
-                model = model.replace('/', '_')
+            # We don't want unnecessary subfolders because of potential slashes in camera model
+            model = model.replace('/', '_')
 
             # memorize model when uploading photos so it can later be used for video files as a fallback
             global model_retention
