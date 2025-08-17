@@ -42,6 +42,7 @@ MODEL_RENAMINGS = { # Possibility to fix stuff or deviate from EXIF entry for ni
     #"ILCE-7": "A7", # FF A7 models
     "WB35F/WB36F/WB37F": "WB37F", # I know what I have, but sadly they were too lazy to be specific in the EXIF data -_-
 }
+model_retention = "UNKNOWN"
 
 
 class Uploader:
@@ -115,6 +116,10 @@ def uploadDCIM(mount_path, uploader):
             if '/' in model: # We don't want unnecessary subfolders because of potential slashes in camera model
                 model = model.replace('/', '_')
 
+            # memorize model when uploading photos so it can later be used for video files as a fallback
+            global model_retention
+            model_retention = model
+
         except Exception as e:
             print("Error handling", file_path, e)
             continue
@@ -126,14 +131,24 @@ def uploadDCIM(mount_path, uploader):
 
 def uploadMP4(mount_path, uploader):
 
-    MP4 = os.path.join(mount_path, "PRIVATE", "M4ROOT", "CLIP")
-    if not os.path.isdir(MP4):
-        print(f"no M4ROOT found, no mp4 upload...")
-        return
+    MP4path = os.path.join(mount_path, "PRIVATE", "M4ROOT")
+    if os.path.isdir(MP4path):
+        uploadMP4path(MP4path, uploader)
+    else:
+        print(f"no PRIVATE/M4ROOT found, skipping...")
 
-    files = [glob.glob(os.path.join(MP4, f"*.{ext}")) for ext in ["MP4"]]
+    # Samsung camera stores MP4 files in DCIM/100PHOTO/
+    MP4path = os.path.join(mount_path, "DCIM")
+    if os.path.isdir(MP4path):
+        print("attempting MP4 upload for MP4 files in DCIM")
+        uploadMP4path(MP4path, uploader)
+
+
+def uploadMP4path(MP4path, uploader):
+
+    files = [glob.glob(os.path.join(MP4path, f"**/*.{ext}")) for ext in ["MP4"]]
     files = sorted(itertools.chain(*files))
-    print(f"DCIM auto uploader working on MP4 path {MP4} for {len(files)} files...")
+    print(f"DCIM auto uploader working on MP4 path {MP4path} for {len(files)} files...")
 
     for file_path in files:
 
@@ -161,8 +176,8 @@ def uploadMP4(mount_path, uploader):
             try:
                 model = meta["XML:DeviceModelName"]
             except: # fallback
-                print(f"could not determine model for {file_path} :(")
-                model = "UNKNOWN"
+                print(f'could not determine model for {file_path} :(  ->  using "{model_retention}" as a fallback')
+                model = model_retention
 
         base, ext = uploader.base_ext(file_path)
         newname = f"{dt.strftime('%Y%m%d_%H%M%S')}_{model}_{base}.{ext}"
