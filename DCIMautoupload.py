@@ -33,6 +33,15 @@ EXTENSIONS = [
 # TODO: from config
 REMOTE_NAME = "sciebo"
 REMOTE_DIR = "DCIM"
+TRIM_MAKE_FROM_MODEL = True # e.g. Samsung cameras have unnecessary (!) leading "SAMSUNG " in the Model
+MODEL_RENAMINGS = { # Possibility to fix stuff or deviate from EXIF entry for nicer(/shorter) filenames (at the expense of "falsifying" them)
+    #"DMC-GF1": "GF1",
+    #"DC-TZ202": "TZ202",
+    "DSC-RX100": "RX100", # RX100 1"-type models
+    #"ILCE-6": "A6", # APS-C models
+    #"ILCE-7": "A7", # FF A7 models
+    "WB35F/WB36F/WB37F": "WB37F", # I know what I have, but sadly they were too lazy to be specific in the EXIF data -_-
+}
 
 
 class Uploader:
@@ -91,8 +100,20 @@ def uploadDCIM(mount_path, uploader):
         try:
             exif = pyexiv2.ImageMetadata(file_path)
             exif.read()
+            make = exif["Exif.Image.Make"].value.strip()
             model = exif["Exif.Image.Model"].value.strip()
             dt = exif["Exif.Image.DateTime"].value
+
+            if TRIM_MAKE_FROM_MODEL:
+                model = model.replace(make, "").strip()
+
+            for k, v in MODEL_RENAMINGS.items():
+                if k in model:
+                    model = model.replace(model, v)
+                    continue # only apply 1 renamimg rule at maximum
+
+            if '/' in model: # We don't want unnecessary subfolders because of potential slashes in camera model
+                model = model.replace('/', '_')
 
         except Exception as e:
             print("Error handling", file_path, e)
