@@ -10,8 +10,11 @@ This tool is intended for Raspbian Lite installations since those don't include 
 # Installation
 Copy the project folder to the pi and run `sudo ./install.sh`
 
+Yes, I know that this is absolutely not a great way to roll out software, but it is what it is right now...
+
 Next, configure rclone, I use Sciebo (via WebDAV) for that and a folder named `DCIM`, but that's up to you.
 You may need to adapt the `REMOTE_NAME` and `REMOTE_DIR` variables in the script.
+Additionally, `MODEL_RENAMINGS` can be adjusted according to the owned camera models and their specifics.
 
 # Usage
 Plug camera via USB cable (or SD card in SD card reader) into the pi and wait :)
