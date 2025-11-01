@@ -12,6 +12,10 @@ import exiftool # pip install PyExifTool / apt install exiftool
 from rclone_python import rclone # pip install rclone-python
 from rclone_python.hash_types import HashTypes
 
+
+#import photofixer  # pip install git+https://github.com/r41d/photofixer
+
+
 EXTENSIONS = [
     "JPG", "JPEG", "TIF", "TIFF", "HIF", "HEIF", "HEIC", # non-raw pictures
     "XMP", # metadata
@@ -94,8 +98,12 @@ def uploadDCIM(mount_path, uploader):
 
     for file_path in files:
 
-        if uploader.is_file_hash_present(file_path): # check before expensive computations on file
-            print(f"hash for {file_path} already present on remote, skipping...")
+        try:
+            if uploader.is_file_hash_present(file_path): # check before expensive computations on file
+                print(f"hash for {file_path} already present on remote, skipping...")
+                continue
+        except FileNotFoundError:
+            print(f"file {file_path} removed in the meantime, skipping...")
             continue
 
         try:
