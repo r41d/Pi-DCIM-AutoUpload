@@ -200,7 +200,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.event != "device_mounted":
-        print("different event than 'device_mounted', exiting...")
+        print(f"event ({args.event}) different than 'device_mounted', exiting...")
         exit(1)
 
     uploader = Uploader(REMOTE_NAME, REMOTE_DIR)

@@ -4,7 +4,7 @@ Description=Handle automatic uploading of DCIM folders on storage devices
 [Service]
 Type=simple
 User=pi
-ExecStart=/usr/bin/udiskie -F -T -N --notify-command "/usr/local/bin/DCIMautoupload.py {event} {mount_path}"
+ExecStart=/usr/bin/udiskie -F -T -N --event-hook "/usr/local/bin/DCIMautoupload.py {event} {mount_path}"
 Restart=always
 
 [Install]
