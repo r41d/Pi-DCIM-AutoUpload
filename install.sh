@@ -10,9 +10,13 @@ echo "Placing autoupload.py script"
 mkdir -p /usr/local/bin/
 cp DCIMautoupload.py /usr/local/bin/
 
+# https://github.com/coldfix/udiskie/wiki/Permissions
 echo "Configuring polkit to allow plugdev users"
 mkdir -p /etc/polkit-1/localauthority/50-local.d/
 cp DCIMautoupload.pkla /etc/polkit-1/localauthority/50-local.d/
+mkdir -p /etc/polkit-1/rules.d/
+cp DCIMautoupload.rules /etc/polkit-1/rules.d/DCIMautoupload.rules
+chmod 0644 /etc/polkit-1/rules.d/DCIMautoupload.rules
 systemctl restart polkit.service
 
 echo "Installing udiskie and configuring service with event hook"
